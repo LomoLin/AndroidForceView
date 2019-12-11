@@ -26,4 +26,9 @@ public class Node {
         this.level = level;
     }
 
+    public Node(String text, int level, float radius) {
+        this.text = text;
+        this.level = level;
+        this.radius = radius;
+    }
 }

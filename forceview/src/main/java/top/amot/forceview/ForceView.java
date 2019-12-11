@@ -33,10 +33,10 @@ public class ForceView extends SurfaceView implements SurfaceHolder.Callback, Si
     private float scale = 1f;
     private int touchSlop;
 
-    private Node selectedNode;
+//    private Node selectedNode;
     private List<Link> targetLinks = new ArrayList<>();
     private List<Link> sourceLinks = new ArrayList<>();
-    private List<Node> selectedNodes = new ArrayList<>();
+//    private List<Node> selectedNodes = new ArrayList<>();
 
     private int activePointerId = -1;
     private float downX, downY;
@@ -122,13 +122,13 @@ public class ForceView extends SurfaceView implements SurfaceHolder.Callback, Si
         canvas.translate(translateX, translateY);
         canvas.scale(scale, scale);
 
-        canvas.drawColor(Color.WHITE);
-        drawer.setSelectedNode(selectedNode);
+        canvas.drawColor(Color.BLACK);
+//        drawer.setSelectedNode(selectedNode);
         drawer.drawLinks(canvas, simulation.getLinks());
         drawer.drawNodes(canvas, simulation.getNodes());
         drawer.drawLinks(canvas, targetLinks);
         drawer.drawLinks(canvas, sourceLinks);
-        drawer.drawNodes(canvas, selectedNodes);
+//        drawer.drawNodes(canvas, selectedNodes);
 
         canvas.restore();
     }
@@ -140,6 +140,9 @@ public class ForceView extends SurfaceView implements SurfaceHolder.Callback, Si
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+//        if (event.getPointerCount() > 1) {
+//            return scaleDetector.onTouchEvent(event);
+//        }
         scaleDetector.onTouchEvent(event);
 
         float x;
@@ -148,44 +151,49 @@ public class ForceView extends SurfaceView implements SurfaceHolder.Callback, Si
 
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
-                activePointerId = event.getPointerId(0);
+                Log.d("xmlinjj", "touch down");
+//                activePointerId = event.getPointerId(0);
                 x0 = downX = x = event.getX();
                 y0 = downY = y = event.getY();
-                selectedNode = simulation.find(x - translateX, y - translateY, Node.RADIUS * scale);
-                if (selectedNode != null) {
-                    Link[] links = simulation.getLinks();
-                    for (Link link : links) {
-                        if (link.source == selectedNode) {
-                            selectedNodes.add(link.target);
-                            targetLinks.add(link);
-                        } else if (link.target == selectedNode) {
-                            selectedNodes.add(link.source);
-                            sourceLinks.add(link);
-                        }
-                    }
-                    selectedNode.fx = selectedNode.x;
-                    selectedNode.fy = selectedNode.y;
-                    simulation.restart();
-                }
+//                selectedNode = simulation.find(x - translateX, y - translateY, Node.RADIUS * scale);
+//                if (selectedNode != null) {
+//                    Link[] links = simulation.getLinks();
+//                    for (Link link : links) {
+//                        if (link.source == selectedNode) {
+//                            selectedNodes.add(link.target);
+//                            targetLinks.add(link);
+//                        } else if (link.target == selectedNode) {
+//                            selectedNodes.add(link.source);
+//                            sourceLinks.add(link);
+//                        }
+//                    }
+//                    selectedNode.fx = selectedNode.x;
+//                    selectedNode.fy = selectedNode.y;
+//                    simulation.restart();
+//                }
                 break;
 
             case MotionEvent.ACTION_MOVE:
-                pointerIndex = event.findPointerIndex(activePointerId);
-                x = event.getX(pointerIndex);
-                y = event.getY(pointerIndex);
+                Log.d("xmlinjj", "touch move");
+//                pointerIndex = event.findPointerIndex(activePointerId);
+//                x = event.getX(pointerIndex);
+//                y = event.getY(pointerIndex);
+                x = event.getX();
+                y = event.getY();
 
-                if (Math.abs((x - x0) * (x - y0)) > touchSlop * touchSlop) {
-                    if (selectedNode != null) {
-                        selectedNode.fx = (x - translateX) / scale;
-                        selectedNode.fy = (y - translateY) / scale;
-                        simulation.restart();
-                    } else {
+                if (Math.abs((x - x0) * (y - y0)) > touchSlop * touchSlop) {
+//                    if (selectedNode != null) {
+//                        selectedNode.fx = (x - translateX) / scale;
+//                        selectedNode.fy = (y - translateY) / scale;
+//                        simulation.restart();
+//                    } else {
                         if (!scaleDetector.isInProgress()) {
+                            Log.d("xmlinjj", "scale not in progress");
                             translateX += x - downX;
                             translateY += y - downY;
-                            invalidate();
+                            onTick();
                         }
-                    }
+//                    }
                 }
                 downX = x;
                 downY = y;
@@ -193,43 +201,47 @@ public class ForceView extends SurfaceView implements SurfaceHolder.Callback, Si
 
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
-                activePointerId = -1;
-                if (selectedNode != null) {
-                    //simulation.setAlphaTarget(0);
-                    selectedNode.fx = 0;
-                    selectedNode.fy = 0;
-
-                    invalidate();
-                    x = event.getX();
-                    y = event.getY();
-                    if (Math.abs((x - x0) * (y - y0)) < touchSlop * touchSlop) {
-                        if (onNodeClickListener != null) {
-                            onNodeClickListener.onNodeClick(selectedNode);
-                        }
-                    }
-                    selectedNode = null;
-                }
-                targetLinks.clear();
-                sourceLinks.clear();
-                selectedNodes.clear();
+                Log.d("xmlinjj", "touch up");
+//                activePointerId = -1;
+//                if (selectedNode != null) {
+//                    //simulation.setAlphaTarget(0);
+//                    selectedNode.fx = 0;
+//                    selectedNode.fy = 0;
+//
+//                    invalidate();
+//                    x = event.getX();
+//                    y = event.getY();
+//                    if (Math.abs((x - x0) * (y - y0)) < touchSlop * touchSlop) {
+//                        if (onNodeClickListener != null) {
+//                            onNodeClickListener.onNodeClick(selectedNode);
+//                        }
+//                    }
+//                    selectedNode = null;
+//                }
+//                targetLinks.clear();
+//                sourceLinks.clear();
+//                selectedNodes.clear();
                 break;
 
             case MotionEvent.ACTION_POINTER_DOWN:
-                selectedNode = null;
-                targetLinks.clear();
-                sourceLinks.clear();
+                Log.d("xmlinjj", "pointer down");
+//                selectedNode = null;
+//                targetLinks.clear();
+//                sourceLinks.clear();
                 break;
 
             case MotionEvent.ACTION_POINTER_UP:
-                pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK)
-                        >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
-                int pointerId = event.getPointerId(pointerIndex);
-                if (pointerId == activePointerId) {
-                    final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
-                    downX = event.getX(newPointerIndex);
-                    downY = event.getY(newPointerIndex);
-                    activePointerId = event.getPointerId(newPointerIndex);
-                }
+                Log.d("xmlinjj", "touch up");
+//                pointerIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK)
+//                        >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+//                int pointerId = event.getPointerId(pointerIndex);
+//                if (pointerId == activePointerId) {
+//                    Log.d("--force", "pointer equal");
+//                    final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
+//                    downX = event.getX(newPointerIndex);
+//                    downY = event.getY(newPointerIndex);
+//                    activePointerId = event.getPointerId(newPointerIndex);
+//                }
                 break;
         }
         return true;
